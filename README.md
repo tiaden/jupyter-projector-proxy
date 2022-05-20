@@ -158,7 +158,7 @@ Upon successful installation of `jupyter-projector-proxy`, your Jupyter environm
 * If you are using Jupyter Notebook, on the `New` menu, select one of your installed IDEs . If you are using JupyterLab, select the installed IDE icon on the launcher.
 
 <p align="center">
-  <img alt="image" width="600" src="https://github.com/tiaden/jupyter-projector-proxy/raw/main/img/projector.png">
+  <img alt="image" width="600" src="https://github.com/tiaden/jupyter-projector-proxy/raw/master/img/projector_jupyterlab.png">
 </p>
 
 ## Integration with JupyterHub
