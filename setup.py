@@ -9,7 +9,7 @@ setuptools.setup(
     name="jupyter-projector-proxy",
     version="1.0.0",
     url="https://github.com/tiaden/jupyter-projector-proxy",
-    authors="Edem Tiassou, Monisha Shcherbakova",
+    author="Edem Tiassou",
     license="MIT LICENSE",
     description="Jupyter extension to proxy Jetbrains IDE",
     long_description=long_description,

@@ -34,10 +34,10 @@ This package has the same requirements as its dependencies:
     libgtk-3-0
   ```
   
-* Install at least one of the [supported](#supported-jetbrains-ides) Jetbrains IDEs like the following:
+* Install at least one of the [supported](#supported-jetbrains-ides) Jetbrains IDEs otherwise the installation will fail. See installation examples below.
 
 After installing the desired intelliJ product, make sure that:
-* The idea.properties located at `IDE_HOME/bin` is writable by the user that has started `jupyter/jupyterlab/jupyterhub`. `IDE_HOME` is the location where you installed your desired jetbrains IDE
+* The `idea.properties` located at `IDE_HOME/bin` is writable by the user that has started `jupyter/jupyterlab/jupyterhub`. `IDE_HOME` is the location where you installed your desired jetbrains IDE
 * The installed IDEs can be discovered by this package by using one of the following options:
   * Option 1: (Recommended)
   
@@ -203,6 +203,14 @@ In the environment that you have installed the package:
     ```bash
     $ python --version
     Python 3.8.10
+    ```
+
+* Verify that the user has `Write` permission on `[IDE_HOME]/bin/idea.properties`.
+  If you don't see `Permissions Granted` after executing the below command, you need to follow the 
+  example above in order to modify the permissions of the user that runs `jupyter/jupyterlab/jupyterhub`
+    ```bash
+     # If you have installed pycharm like in the above example
+    $ [ -w /opt/pycharm/bin/idea.properties ] && echo "Permissions Granted"
     ```
 
 * Ensure that `jupyter-projector-proxy` and the `jupyter` executables are in the same environment as the python executable.
