@@ -20,6 +20,20 @@ To report any issues or suggestions, see the [Feedback](#feedback) section.
 This package has the same requirements as its dependencies:
 * See [Requirements](https://github.com/jupyterhub/jupyter-server-proxy#requirements) from `jupyter-server-proxy`
 * See [Requirements](https://github.com/JetBrains/projector-installer#Installation) from `projector-installer`
+* If not already installed, install system packages required for JetBrains-in-a-browser support
+  
+  **Example (ubuntu):**
+  ```bash
+    # Install as root or superuser
+    apt-get update && \
+    DEBIAN_FRONTEND="noninteractive" apt-get install -y \
+    libxtst6 \
+    libxrender1 \
+    libfontconfig1 \
+    libxi6 \
+    libgtk-3-0
+  ```
+  
 * Install at least one of the [supported](#supported-jetbrains-ides) Jetbrains IDEs like the following:
 
 After installing the desired intelliJ product, make sure that:
@@ -74,7 +88,7 @@ After installing the desired intelliJ product, make sure that:
        # As root or superuser
        # Install Pycharm Community
         mkdir -p /opt/pycharm
-        curl -L "https://download.jetbrains.com/product?code=PC&latest&distribution=linux" \
+        curl -L "https://download.jetbrains.com/product?code=PCC&latest&distribution=linux" \
        | tar -C /opt/pycharm --strip-components 1 -xzvf -
        
        # Make The idea.properties editable
@@ -185,10 +199,10 @@ In the environment that you have installed the package:
      /usr/bin/pycharm
     ```
 
-* Check if their Python version is 3.9 or higher
+* Check if their Python version is 3.8 or higher
     ```bash
     $ python --version
-    Python 3.9.12
+    Python 3.8.10
     ```
 
 * Ensure that `jupyter-projector-proxy` and the `jupyter` executables are in the same environment as the python executable.
@@ -214,6 +228,16 @@ In the environment that you have installed the package:
     # If you don't see anyone of them, then either the packages missing in the output have been installed
     # in a different python environment or not installed at all.
     $ pip freeze | grep -E "jupyter|jupyter-projector-proxy"
+    ```
+
+* Ensure that all required system packages are installed for JetBrains-in-a-browser support 
+    
+  **Example (ubuntu):**
+    ```bash
+    # Pipe the output of apt and grep for the required system packages.
+    # All required packages should be highlighted in the output.
+    # If you don't see anyone of them, then the packages missing in the output have not been installed
+    $ apt list --installed | grep -E "libxtst6|libxrender1|libfontconfig1|libxi6|libgtk-3-0"
     ```
 
 * If the integration is not showing up as an option to the dropdown box in the Jupyter notebook:

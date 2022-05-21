@@ -4,7 +4,7 @@ import subprocess
 from pathlib import Path
 import logging
 
-_logger = logging.getLogger(__name__)
+logger = logging.getLogger(__name__)
 
 _to_generic_name = {
     "pycharm-professional": "pycharm",
@@ -111,10 +111,11 @@ def setup_projector_for(ide_name, ide_title):
         """
 
         cmd = [get_projector_executable(), '--accept-license', 'config', 'add',
-               '--use-separate-config', '--force', '--port', str(port), '--hostname=127.0.0.1', ide_name,
+               '--use-separate-config', '--force', '--port', str(port), '--hostname=localhost', ide_name,
                get_ide_home(ide_name)]
         ret = subprocess.check_output(cmd)
-        print(ret.decode())
+        logger.info(f"Configuration for {ide_name} successful")
+        logger.info(ret.decode())
         start_cmd = os.path.join(str(Path.home()), '.projector/configs', ide_name, 'run.sh')
         return [start_cmd]
 
@@ -193,9 +194,9 @@ def _try_add_ide(entry_point_array, ide_name, entry_point_item):
     try:
         get_ide_home(ide_name)
         entry_point_array.append(entry_point_item)
+        logger.info(f"Found installed ide {ide_name}")
     except FileNotFoundError:
-        print(f"Warning:{ide_name} could not be found !")
-        _logger.error(f"Warning:{ide_name} could not be found !")
+        logger.warning(f"Warning:{ide_name} could not be found !")
 
 
 def get_projector_servers():
