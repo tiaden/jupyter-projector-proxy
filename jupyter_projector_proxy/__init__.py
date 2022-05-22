@@ -5,6 +5,15 @@ from pathlib import Path
 import logging
 
 logger = logging.getLogger(__name__)
+# create console handler
+console_handler = logging.StreamHandler()
+# create formatter
+formatter = logging.Formatter('[%(asctime)s %(name)s]%(levelname)s %(message)s', '%Y-%m-%d %H:%M:%S')
+
+# add formatter to ch
+console_handler.setFormatter(formatter)
+# add ch to logger
+logger.addHandler(console_handler)
 
 _to_generic_name = {
     "pycharm-professional": "pycharm",
@@ -13,6 +22,15 @@ _to_generic_name = {
     "intellij-idea-ultimate": "idea",
     "intellij-idea-educational": "idea",
     "intellij-idea-community": "idea"
+}
+
+_no_op_server_process = {
+    'command': lambda: '',
+    'launcher_entry': {
+        'title': "No Operation server_process",
+        'icon_path': "No icon",
+        'enabled': False
+    }
 }
 
 
@@ -94,13 +112,26 @@ def get_ide_home(ide_name):
     return Path(get_jetbrains_ide_executable(ide_name)).resolve().parent.parent.absolute()
 
 
-def setup_projector_for(ide_name, ide_title):
+def try_setup_projector_for(ide_name, ide_title):
     if not isinstance(ide_name, str):
         raise ValueError("ide_name must be of a String type")
 
     if not isinstance(ide_title, str):
         raise ValueError("ide_title_name must be of a String type")
+    """
+    Since this package support multiples jetbrains IDEs, we need to fail silently
+    for non installed IDEs in order to give a chance to those installed
+    """
+    try:
+        get_ide_home(ide_name)
+        logger.info(f"Found installed ide {ide_name}")
+        return _do_setup_projector_for(ide_name, ide_title)
+    except FileNotFoundError:
+        logger.warning(f"{ide_name} could not be found !")
+        return _no_op_server_process
 
+
+def _do_setup_projector_for(ide_name, ide_title):
     def _get_cmd(port):
         """
          Create the ide config needed by projector and the start command.
@@ -133,102 +164,78 @@ def setup_projector_for(ide_name, ide_title):
 
 
 def setup_pycharm():
-    return setup_projector_for("pycharm", "PyCharm")
+    return try_setup_projector_for("pycharm", "PyCharm")
 
 
 def setup_pycharm_professional():
-    return setup_projector_for("pycharm-professional", "PyCharm Professional")
+    return try_setup_projector_for("pycharm-professional", "PyCharm Professional")
 
 
 def setup_pycharm_community():
-    return setup_projector_for("pycharm-community", "PyCharm Community")
+    return try_setup_projector_for("pycharm-community", "PyCharm Community")
 
 
 def setup_pycharm_educational():
-    return setup_projector_for("pycharm-educational", "PyCharm Educational")
+    return try_setup_projector_for("pycharm-educational", "PyCharm Educational")
 
 
 def setup_intellij():
-    return setup_projector_for("idea", "Intellij")
+    return try_setup_projector_for("idea", "Intellij")
 
 
 def setup_intellij_idea_ultimate():
-    return setup_projector_for("intellij-idea-ultimate", "Intellij Idea Ultimate")
+    return try_setup_projector_for("intellij-idea-ultimate", "Intellij Idea Ultimate")
 
 
 def setup_intellij_idea_community():
-    return setup_projector_for("intellij-idea-community", "Intellij Idea Community")
+    return try_setup_projector_for("intellij-idea-community", "Intellij Idea Community")
 
 
 def setup_intellij_idea_educational():
-    return setup_projector_for("intellij-idea-educational", "Intellij Idea Edu")
+    return try_setup_projector_for("intellij-idea-educational", "Intellij Idea Edu")
 
 
 def setup_datagrip():
-    return setup_projector_for("datagrip", "DataGrip")
+    return try_setup_projector_for("datagrip", "DataGrip")
 
 
 def setup_webstorm():
-    return setup_projector_for("webstorm", "WebStorm")
+    return try_setup_projector_for("webstorm", "WebStorm")
 
 
 def setup_goland():
-    return setup_projector_for("goland", "Goland")
+    return try_setup_projector_for("goland", "Goland")
 
 
 def setup_clion():
-    return setup_projector_for("clion", "Clion")
+    return try_setup_projector_for("clion", "Clion")
 
 
 def setup_phpstorm():
-    return setup_projector_for("phpstorm", "PhpStorm")
+    return try_setup_projector_for("phpstorm", "PhpStorm")
 
 
 def setup_rubymine():
-    return setup_projector_for("rubymine", "RubyMine")
-
-
-def _try_add_ide(entry_point_array, ide_name, entry_point_item):
-    # Since this package support multiples jetbrains IDEs, we need to fail silently
-    # for non installed IDEs in order to give a chance to those installed
-    try:
-        get_ide_home(ide_name)
-        entry_point_array.append(entry_point_item)
-        logger.info(f"Found installed ide {ide_name}")
-    except FileNotFoundError:
-        logger.warning(f"Warning:{ide_name} could not be found !")
+    return try_setup_projector_for("rubymine", "RubyMine")
 
 
 def get_projector_servers():
-    entry_points = []
-    # Pycharm editions
-    _try_add_ide(entry_points, "pycharm", "pycharm = jupyter_projector_proxy:setup_pycharm")
-    _try_add_ide(entry_points, "pycharm-professional", "pycharm-professional = "
-                                                       "jupyter_projector_proxy:setup_pycharm_professional")
-    _try_add_ide(entry_points, "pycharm-community", "pycharm-community = "
-                                                    "jupyter_projector_proxy:setup_pycharm_community")
-    _try_add_ide(entry_points, "pycharm-educational", "pycharm-educational = "
-                                                      "jupyter_projector_proxy:setup_pycharm_educational")
-    # IntelliJ editions
-    _try_add_ide(entry_points, "idea", "idea = jupyter_projector_proxy:setup_intellij")
-    _try_add_ide(entry_points, "intellij-idea-ultimate", "intellij-idea-ultimate = "
-                                                         "jupyter_projector_proxy:setup_intellij_idea_ultimate")
-    _try_add_ide(entry_points, "intellij-idea-community", "intellij-idea-community = "
-                                                          "jupyter_projector_proxy:setup_intellij_idea_community")
-    _try_add_ide(entry_points, "intellij-idea-educational", "intellij-idea-educational = "
-                                                            "jupyter_projector_proxy:setup_intellij_idea_educational")
-
-    _try_add_ide(entry_points, "datagrip", "datagrip = jupyter_projector_proxy:setup_datagrip")
-    _try_add_ide(entry_points, "webstorm", "webstorm = jupyter_projector_proxy:setup_webstorm")
-    _try_add_ide(entry_points, "goland", "goland = jupyter_projector_proxy:setup_goland")
-    _try_add_ide(entry_points, "clion", "clion = jupyter_projector_proxy:setup_clion")
-    _try_add_ide(entry_points, "phpstorm", "phpstorm = jupyter_projector_proxy:setup_phpstorm")
-    _try_add_ide(entry_points, "rubymine", "rubymine = jupyter_projector_proxy:setup_rubymine")
-
-    # There should be at least one supported IDEs installed or found. Otherwise, an exception is thrown
-    # Meaning, this extension should not be installed without at least one supported IDEs
-    if 0 == len(entry_points):
-        raise ValueError("No supported IDEs can be found. At least one of the supported IDEs should me installed."
-                         " Consult the documentation for more information")
-
-    return entry_points
+    return [
+        # Pycharm editions
+        "pycharm = jupyter_projector_proxy:setup_pycharm",
+        "pycharm-professional = jupyter_projector_proxy:setup_pycharm_professional",
+        "pycharm-community = jupyter_projector_proxy:setup_pycharm_community",
+        "pycharm-educational = jupyter_projector_proxy:setup_pycharm_educational",
+        # IntelliJ editions
+        "idea = jupyter_projector_proxy:setup_intellij",
+        "intellij-idea-ultimate = jupyter_projector_proxy:setup_intellij_idea_ultimate",
+        "intellij-idea-community = jupyter_projector_proxy:setup_intellij_idea_community",
+        "intellij-idea-educational = jupyter_projector_proxy:setup_intellij_idea_educational",
+        # Other IDEs
+        "datagrip = jupyter_projector_proxy:setup_datagrip",
+        "webstorm = jupyter_projector_proxy:setup_webstorm",
+        "goland = jupyter_projector_proxy:setup_goland",
+        "clion = jupyter_projector_proxy:setup_clion",
+        "phpstorm = jupyter_projector_proxy:setup_phpstorm",
+        "rubymine = jupyter_projector_proxy:setup_rubymine"
+    ]

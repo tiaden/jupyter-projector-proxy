@@ -34,7 +34,7 @@ This package has the same requirements as its dependencies:
     libgtk-3-0
   ```
   
-* Install at least one of the [supported](#supported-jetbrains-ides) Jetbrains IDEs otherwise the installation will fail. See installation examples below.
+* Install at least one of the [supported](#supported-jetbrains-ides) Jetbrains IDEs. See installation examples below.
 
 After installing the desired intelliJ product, make sure that:
 * The `idea.properties` located at `IDE_HOME/bin` is writable by the user that has started `jupyter/jupyterlab/jupyterhub`. `IDE_HOME` is the location where you installed your desired jetbrains IDE
