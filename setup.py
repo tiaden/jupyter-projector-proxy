@@ -7,7 +7,7 @@ long_description = (HERE / "README.md").read_text()
 
 setuptools.setup(
     name="jupyter-projector-proxy",
-    version="1.0.7",
+    version="1.0.8",
     url="https://github.com/tiaden/jupyter-projector-proxy",
     author="Edem Tiassou",
     author_email="workmail.edem@gmail.com",
