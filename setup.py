@@ -7,12 +7,12 @@ long_description = (HERE / "README.md").read_text()
 
 setuptools.setup(
     name="jupyter-projector-proxy",
-    version="1.0.8",
+    version="1.0.9",
     url="https://github.com/tiaden/jupyter-projector-proxy",
     author="Edem Tiassou",
     author_email="workmail.edem@gmail.com",
     license="MIT LICENSE",
-    description="Jupyter extension to proxy Jetbrains IDE",
+    description="Jupyter extension to proxy Jetbrains IDEs",
     long_description=long_description,
     long_description_content_type="text/markdown",
     packages=setuptools.find_packages(exclude=["tests"]),
